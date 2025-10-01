@@ -11,7 +11,6 @@ function AddProduct() {
     category: '',
     brand: '',
     status: '1',
-    sale: 0,
     companyProfile: '',
     detail: '',
     avatars: [],
@@ -21,8 +20,7 @@ function AddProduct() {
   const [category, setCategory] = useState([]);
   const [brand, setBrand] = useState([]);
   const [error, setError] = useState({});
-  const [file, setFile] = useState();
-  const [avatar, setAvatar] = useState();
+  const [file, setFile] = useState([]);
 
   useEffect(() => {
     api
@@ -63,14 +61,10 @@ function AddProduct() {
   };
 
   const handleImg = (event) => {
-    const file = event.target.files;
-
-    const render = new FileReader();
-    render.onload = (e) => {
-      setAvatar(e.target.result); // gui qua api
-      setFile(file[0]);
-    };
-    render.readAsDataURL(file[0]);
+    const files = event.target.files;
+    const newFiles = [...file, ...files];
+    setFile(newFiles);
+    setInput((state) => ({ ...state, avatars: newFiles }));
   };
 
   const handleBrand = () => {
@@ -100,17 +94,17 @@ function AddProduct() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const error = validateProduct(input, file, 'addProduct');
+    const error = validateProduct(input, 'addProduct', file);
     if (Object.keys(error).length > 0) {
       setError(error);
       return;
     } else {
       const token = JSON.parse(localStorage.getItem('token'));
 
-      const config = {
+      let config = {
         headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
+          Authorization: 'Bearer ' + token,
+          'Content-Type': 'application/x-www-form-urlencoded',
           Accept: 'application/json',
         },
       };
@@ -118,6 +112,30 @@ function AddProduct() {
       const formData = new FormData();
       formData.append('name', input.name);
       formData.append('price', input.price);
+      formData.append('category', input.category);
+      formData.append('brand', input.brand);
+      formData.append('company', input.companyProfile);
+      formData.append('status', input.status);
+      formData.append('sale', input.salePrice);
+      formData.append('detail', input.detail);
+
+      // khi cần gửi nhiều file ảnh thì cần map
+      Object.keys(file).map((item, index) => {
+        formData.append('file[]', file[item]);
+      });
+
+      console.log([...formData.entries()]);
+
+      api
+        .post(API_URL.ADD_PRODUCT, formData, config)
+        .then((response) => {
+          if (response) {
+            console.log(response);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
   return (
@@ -143,12 +161,12 @@ function AddProduct() {
               onChange={handleInput}
             />
             <label>Category (*)</label>
-            <select name="category">
+            <select name="category" onChange={handleInput}>
               <option value="">Please choose Category</option>
               {handleCategory()}
             </select>
             <label>Brand (*)</label>
-            <select name="brand">
+            <select name="brand" onChange={handleInput}>
               <option value="">Please choose Brand</option>
               {handleBrand()}
             </select>
@@ -168,6 +186,20 @@ function AddProduct() {
               multiple
               onChange={handleImg}
             />
+            {file.length > 0 && (
+              <div style={{ display: 'flex', gap: '10px', marginBottom: 10 }}>
+                {file.map((f, index) => (
+                  <img
+                    key={index}
+                    src={URL.createObjectURL(f)}
+                    alt="preview"
+                    width="100"
+                    height="100"
+                    style={{ objectFit: 'cover', borderRadius: '8px' }}
+                  />
+                ))}
+              </div>
+            )}
             <label>Detail</label>
             <textarea
               name="detail"
