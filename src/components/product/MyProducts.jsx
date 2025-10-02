@@ -4,7 +4,7 @@ import api from '../../api';
 import API_URL from '../../api/API_URL';
 
 function MyProducts() {
-  const [dataProd, setDataProd] = useState([]);
+  const [products, setDataProd] = useState([]);
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem('token'));
@@ -28,53 +28,62 @@ function MyProducts() {
       });
   }, []);
 
+  const renderProduct = () => {
+    if (Object.keys(products).length > 0) {
+      return Object.keys(products).map((key, index) => {
+        const imgArr = JSON.parse(products[key].image);
+        const firstImage = imgArr[0];
+        return (
+          <tr key={key}>
+            <td>
+              <h4>
+                <a href="">{products[key].id}</a>
+              </h4>
+            </td>
+            <td className="cart_description">
+              <a href="">{products[key].name}</a>
+            </td>
+            <td className="cart_product">
+              <img
+                style={{ width: '100px', height: '100px' }}
+                src={
+                  'http://localhost/laravel8/public/upload/product/' +
+                  products[key].id_user +
+                  '/' +
+                  firstImage
+                }
+                alt="product"
+              />
+            </td>
+            <td className="cart_price">{products[key].price}</td>
+            <td className="cart_total">
+              <Link href="">
+                <i className="fa fa-pencil-square" aria-hidden="true"></i>
+              </Link>
+              <Link href="">
+                <i className="fa fa-trash-o" aria-hidden="true"></i>
+              </Link>
+            </td>
+          </tr>
+        );
+      });
+    }
+  };
+
   return (
     <div className="col-sm-9">
       <div className="table-responsive cart_info">
         <table className="table table-condensed">
           <thead>
             <tr className="cart_menu">
-              <td className="image">image</td>
-              <td className="description">name</td>
-              <td className="price">price</td>
-              <td className="total">action</td>
+              <td className="id">Id</td>
+              <td className="image">Image</td>
+              <td className="description">Name</td>
+              <td className="price">Price</td>
+              <td className="total">Action</td>
             </tr>
           </thead>
-          <tbody>
-            {dataProd && dataProd.length > 0 ? (
-              dataProd.map((item) => (
-                <tr key={item.id}>
-                  <td className="cart_product">
-                    <img
-                      src={`http://localhost/laravel8/public/upload/product/${item.image}`}
-                      alt={item.name}
-                      style={{ width: 80 }}
-                    />
-                  </td>
-                  <td className="cart_description">
-                    <h4>{item.name}</h4>
-                  </td>
-                  <td className="cart_price">
-                    <p>${item.price}</p>
-                  </td>
-                  <td className="cart_total">
-                    <a href="#">
-                      <i className="fa fa-pencil-square" aria-hidden="true"></i>
-                    </a>
-                    <a href="#">
-                      <i className="fa fa-trash-o" aria-hidden="true"></i>
-                    </a>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4" style={{ textAlign: 'center' }}>
-                  No products found
-                </td>
-              </tr>
-            )}
-          </tbody>
+          <tbody>{renderProduct()}</tbody>
         </table>
         <Link to="/account/product/add">
           <button type="button" className="btn btn-default btn-primary">
