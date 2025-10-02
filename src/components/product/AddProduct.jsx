@@ -3,6 +3,7 @@ import api from '../../api';
 import API_URL from '../../api/API_URL';
 import { validateProduct } from '../../utils/validateProduct';
 import Errors from '../errors/Errors';
+import { toast } from 'react-toastify';
 
 function AddProduct() {
   const [input, setInput] = useState({
@@ -17,8 +18,8 @@ function AddProduct() {
     salePrice: '',
   });
 
-  const [category, setCategory] = useState([]);
-  const [brand, setBrand] = useState([]);
+  const [category, setCategory] = useState('');
+  const [brand, setBrand] = useState('');
   const [error, setError] = useState({});
   const [file, setFile] = useState([]);
 
@@ -109,7 +110,7 @@ function AddProduct() {
         },
       };
 
-      const formData = new FormData();
+      let formData = new FormData();
       formData.append('name', input.name);
       formData.append('price', input.price);
       formData.append('category', input.category);
@@ -120,17 +121,16 @@ function AddProduct() {
       formData.append('detail', input.detail);
 
       // khi cần gửi nhiều file ảnh thì cần map
-      Object.keys(file).map((item, index) => {
+      Object.keys(file).map((item) => {
         formData.append('file[]', file[item]);
       });
-
-      console.log([...formData.entries()]);
 
       api
         .post(API_URL.ADD_PRODUCT, formData, config)
         .then((response) => {
           if (response) {
             console.log(response);
+            toast.success('Add Product success!');
           }
         })
         .catch((error) => {

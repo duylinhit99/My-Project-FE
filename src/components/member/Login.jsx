@@ -26,7 +26,7 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const error = validate(inputs, 'register');
+    const error = validate(inputs, 'login');
 
     if (Object.keys(error).length > 0) {
       setErrors(error);
