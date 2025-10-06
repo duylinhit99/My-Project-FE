@@ -15,6 +15,9 @@ const API_URL = {
   //USER
   PRODUCT_USER: 'user/my-product',
   ADD_PRODUCT: 'user/product/add',
+  PRODUCT_DETAIL: 'user/product/',
+  EDIT_PRODUCT: 'user/product/update/',
+  DELETE_PRODUCT: 'user/product/delete/',
 
   //PRODUCT
   LIST_PRODUCT: 'product/list',

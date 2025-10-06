@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../api';
 import API_URL from '../../api/API_URL';
+import { toast } from 'react-toastify';
 
 function MyProducts() {
   const [products, setDataProd] = useState([]);
@@ -27,6 +28,31 @@ function MyProducts() {
         console.log(errors);
       });
   }, []);
+
+  const handleDelete = (id) => {
+    const token = JSON.parse(localStorage.getItem('token'));
+    let config = {
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      },
+    };
+
+    api
+      .get(API_URL.DELETE_PRODUCT + id, config)
+      .then((res) => {
+        if (res) {
+          const { data } = res.data;
+          setDataProd(data);
+          toast.success('Xóa thành công!');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error('Xóa không thành công!');
+      });
+  };
 
   const renderProduct = () => {
     if (Object.keys(products).length > 0) {
@@ -57,10 +83,10 @@ function MyProducts() {
             </td>
             <td className="cart_price">{products[key].price}</td>
             <td className="cart_total">
-              <Link href="">
+              <Link to={'/account/product/edit/' + products[key].id}>
                 <i className="fa fa-pencil-square" aria-hidden="true"></i>
               </Link>
-              <Link href="">
+              <Link href="" onClick={() => handleDelete(products[key].id)}>
                 <i className="fa fa-trash-o" aria-hidden="true"></i>
               </Link>
             </td>
