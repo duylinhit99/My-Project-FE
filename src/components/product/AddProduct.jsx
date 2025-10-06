@@ -4,6 +4,7 @@ import API_URL from '../../api/API_URL';
 import { validateProduct } from '../../utils/validateProduct';
 import Errors from '../errors/Errors';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function AddProduct() {
   const [input, setInput] = useState({
@@ -22,6 +23,8 @@ function AddProduct() {
   const [brand, setBrand] = useState('');
   const [error, setError] = useState({});
   const [file, setFile] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     api
@@ -129,8 +132,8 @@ function AddProduct() {
         .post(API_URL.ADD_PRODUCT, formData, config)
         .then((response) => {
           if (response) {
-            console.log(response);
             toast.success('Add Product success!');
+            navigate('/account/product');
           }
         })
         .catch((error) => {
