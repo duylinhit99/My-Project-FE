@@ -37,12 +37,12 @@ function Slider() {
                   </div>
                   <div className="col-sm-6">
                     <img
-                      src="images/home/girl1.jpg"
+                      src="/images/home/girl1.jpg"
                       className="girl img-responsive"
                       alt=""
                     />
                     <img
-                      src="images/home/pricing.png"
+                      src="/images/home/pricing.png"
                       className="pricing"
                       alt=""
                     />
@@ -65,12 +65,12 @@ function Slider() {
                   </div>
                   <div className="col-sm-6">
                     <img
-                      src="images/home/girl2.jpg"
+                      src="/images/home/girl2.jpg"
                       className="girl img-responsive"
                       alt=""
                     />
                     <img
-                      src="images/home/pricing.png"
+                      src="/images/home/pricing.png"
                       className="pricing"
                       alt=""
                     />
@@ -94,12 +94,12 @@ function Slider() {
                   </div>
                   <div className="col-sm-6">
                     <img
-                      src="images/home/girl3.jpg"
+                      src="/images/home/girl3.jpg"
                       className="girl img-responsive"
                       alt=""
                     />
                     <img
-                      src="images/home/pricing.png"
+                      src="/images/home/pricing.png"
                       className="pricing"
                       alt=""
                     />
