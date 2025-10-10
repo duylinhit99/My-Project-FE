@@ -14,6 +14,7 @@ import UpdateMember from './components/account/UpdateMember.jsx';
 import MyProducts from './components/product/MyProducts.jsx';
 import AddProduct from './components/product/AddProduct.jsx';
 import EditMyProduct from './components/product/EditMyProduct.jsx';
+import DetailProduct from './components/product/DetailProduct.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -28,6 +29,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/account/product" element={<MyProducts />} />
           <Route path="/account/product/add" element={<AddProduct />} />
           <Route path="/account/product/edit/:id" element={<EditMyProduct />} />
+          <Route path="/product/detail/:id" element={<DetailProduct />} />
         </Router>
       </App>
     </Routers>
