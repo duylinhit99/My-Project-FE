@@ -21,6 +21,7 @@ const API_URL = {
 
   //PRODUCT
   LIST_PRODUCT: 'product/list',
+  HOME_PRODUCT: 'product',
 
   //CATEGORY-BRAND
   CATEGORY_BRAND: 'category-brand',
