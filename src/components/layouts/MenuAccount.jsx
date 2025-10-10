@@ -28,7 +28,7 @@ function MenuAccount() {
                 <Link
                   data-toggle="collapse"
                   data-parent="#accordian"
-                  to="account/product"
+                  to="/account/product"
                 >
                   <span className="badge pull-right">
                     <i className="fa fa-plus"></i>

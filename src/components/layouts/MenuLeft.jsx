@@ -248,7 +248,7 @@ function MenuLeft() {
         </div>
 
         <div className="shipping text-center">
-          <img src="images/home/shipping.jpg" alt="" />
+          <img src="/images/home/shipping.jpg" alt="" />
         </div>
       </div>
     </div>
