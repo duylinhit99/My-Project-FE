@@ -1,13 +1,15 @@
-export default function Error404() {
+import { Link } from 'react-router-dom';
+
+export default function NotFound() {
   return (
-    <div class="container text-center">
-      <div class="logo-404">
+    <div className="container text-center">
+      <div className="logo-404">
         <a href="index.html">
           <img src="images/home/logo.png" alt="" />
         </a>
       </div>
-      <div class="content-404">
-        <img src="images/404/404.png" class="img-responsive" alt="" />
+      <div className="content-404">
+        <img src="images/404/404.png" className="img-responsive" alt="" />
         <h1>
           <b>OPPS!</b> We Couldn’t Find this Page
         </h1>
@@ -16,7 +18,7 @@ export default function Error404() {
           for has up and Vanished.
         </p>
         <h2>
-          <a href="index.html">Bring me back Home</a>
+          <Link to="/">Bring me back Home</Link>
         </h2>
       </div>
     </div>
