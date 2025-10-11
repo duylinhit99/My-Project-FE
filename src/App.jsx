@@ -9,7 +9,7 @@ function App(props) {
   // includes kiem tra xem chuoi hoac object , array co chua phan tu do hay khong
 
   const param1 = useLocation();
-
+  const isCart = param1.pathname === '/cart';
   return (
     <>
       <Header />
@@ -17,10 +17,14 @@ function App(props) {
       <section>
         <div className="container">
           <div className="row">
-            {param1['pathname'].includes('account') ? (
-              <MenuAccount />
-            ) : (
-              <MenuLeft />
+            {!isCart && (
+              <>
+                {param1['pathname'].includes('account') ? (
+                  <MenuAccount />
+                ) : (
+                  <MenuLeft />
+                )}
+              </>
             )}
             {props.children}
           </div>
