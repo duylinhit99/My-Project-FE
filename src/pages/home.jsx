@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api';
 import API_URL from '../api/API_URL';
+import AddToCart from '../components/cart/AddToCart';
 function Home() {
   const [data, setData] = useState({});
 
@@ -11,7 +12,6 @@ function Home() {
       .then((response) => {
         if (response) {
           const { data } = response.data;
-          console.log(data);
           setData(data);
         }
       })
@@ -41,12 +41,10 @@ function Home() {
                   </a>
                 </div>
                 <div className="product-overlay">
-                  <div className="overlay-content" ß>
+                  <div className="overlay-content">
                     <h2>${data[key].price}</h2>
                     <p>{data[key].name}</p>
-                    <a href="#" className="btn btn-default add-to-cart">
-                      <i className="fa fa-shopping-cart"></i>Add to cart
-                    </a>
+                    <AddToCart id={data[key].id} />
                   </div>
                 </div>
               </div>

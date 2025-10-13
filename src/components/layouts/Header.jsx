@@ -1,4 +1,6 @@
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { CartContext } from '../../contexts/CartContext';
 
 function Header() {
   const login = localStorage.getItem('login');
@@ -28,6 +30,8 @@ function Header() {
   const handleLogout = () => {
     localStorage.removeItem('login');
   };
+
+  const { totalQty } = useContext(CartContext);
   return (
     <header id="header">
       <div className="header_top">
@@ -151,9 +155,11 @@ function Header() {
                       <i className="fa fa-crosshairs"></i> Checkout
                     </a>
                   </li>
-                  <li>
-                    <Link to="/cart">
-                      <i className="fa fa-shopping-cart"></i> Cart
+                  <li className="cart-link">
+                    <Link to="/cart" className="cart-item">
+                      <i className="fa fa-shopping-cart"></i>
+                      <span>Cart</span>
+                      <span className="cart-count">{totalQty}</span>
                     </Link>
                   </li>
                   {hanldeStatusLogin()}
@@ -203,7 +209,7 @@ function Header() {
                         <a href="checkout.html">Checkout</a>
                       </li>
                       <li>
-                        <a href="cart.html">Cart</a>
+                        <a href="cart.html">Cart {totalQty}</a>
                       </li>
                       <li>
                         <a href="login.html">Login</a>
