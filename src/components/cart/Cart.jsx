@@ -1,4 +1,154 @@
+import { useEffect, useState } from 'react';
+import api from '../../api';
+import API_URL from '../../api/API_URL';
+import { Link } from 'react-router-dom';
 function Cart() {
+  const [item, setItem] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    const cart = JSON.parse(localStorage.getItem('cart'));
+    api
+      .post(API_URL.ADD_CART_PRODUCT, cart)
+      .then((response) => {
+        if (response) {
+          const { data } = response.data;
+          setItem(data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    let total = 0;
+    Object.keys(item).map((key, i) => {
+      total += item[key].qty * item[key].price;
+    });
+    setTotal(total);
+  }, [item]);
+  // tang so luong
+  const handlePlus = (id) => {
+    const newItem = { ...item };
+
+    // Tăng số lượng lên 1 dựa vào id
+    Object.keys(newItem).map((key, index) => {
+      if (newItem[key].id === id) {
+        newItem[key].qty += 1;
+      }
+    });
+    // cập nhật lại item
+    setItem(newItem);
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+    // Nếu có trong giỏ hàng thì tăng số lượng lên 1
+    if (cart[id]) {
+      cart[id] += 1;
+    } else {
+      //Nếu chưa có trong giỏ hàng thì thêm mới với số lượng là 1
+      cart[id] = 1;
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+  };
+
+  // giam so luong
+  const handleMinus = (id) => {
+    // tạo ra bản sao của item -> shallow copy, deep copy là JSON.parse(JSON.stringify(item))
+    const newItem = { ...item };
+
+    Object.keys(newItem).map((key, index) => {
+      if (newItem[key].id === id) {
+        newItem[key].qty -= 1;
+      }
+    });
+
+    setItem(newItem);
+
+    // cập nhật lại localStorage
+    const cart = JSON.parse(localStorage.getItem('cart'));
+
+    if (cart[id]) {
+      cart[id] -= 1;
+      // nếu số lượng giảm về 0 thì xóa sản phẩm khỏi giỏ hàng
+      if (cart[id] === 0) {
+        delete cart[id];
+      }
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+  };
+
+  const renderData = () => {
+    if (Object.keys(item).length > 0) {
+      return Object.keys(item).map((key, index) => {
+        const imageArr = JSON.parse(item[key].image);
+        const firstImg = imageArr[0];
+        return (
+          <tr key={key}>
+            <td className="cart_product">
+              <a href="">
+                <img
+                  src={`http://localhost/laravel8/public/upload/product/${item[key].id_user}/${firstImg}`}
+                  alt=""
+                  style={{ width: '100px' }}
+                />
+              </a>
+            </td>
+            <td className="cart_description">
+              <h4>
+                <a href="">{item[key].name}</a>
+              </h4>
+              <p>Web ID: {item[key].web_id}</p>
+            </td>
+            <td className="cart_price">
+              <p>${item[key].price}</p>
+            </td>
+            <td className="cart_quantity">
+              <div className="cart_quantity_button">
+                <Link
+                  className="cart_quantity_up"
+                  href=""
+                  onClick={() => handlePlus(item[key].id)}
+                >
+                  {' '}
+                  +{' '}
+                </Link>
+                <input
+                  className="cart_quantity_input"
+                  type="text"
+                  name="quantity"
+                  value={item[key].qty}
+                  autoComplete="off"
+                  size="2"
+                  readOnly
+                />
+                <Link
+                  className="cart_quantity_down"
+                  href=""
+                  onClick={() => handleMinus(item[key].id)}
+                >
+                  {' '}
+                  -{' '}
+                </Link>
+              </div>
+            </td>
+            <td className="cart_total">
+              <p className="cart_total_price" id={item[key].id}>
+                ${item[key].price * item[key].qty}
+              </p>
+            </td>
+            <td className="cart_delete">
+              <a className="cart_quantity_delete" href="">
+                <i className="fa fa-times"></i>
+              </a>
+            </td>
+          </tr>
+        );
+      });
+    }
+  };
   return (
     <>
       <section id="cart_items">
@@ -23,52 +173,7 @@ function Cart() {
                   <td></td>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td className="cart_product">
-                    <a href="">
-                      <img src="/images/cart/one.png" alt="" />
-                    </a>
-                  </td>
-                  <td className="cart_description">
-                    <h4>
-                      <a href="">Colorblock Scuba</a>
-                    </h4>
-                    <p>Web ID: 1089772</p>
-                  </td>
-                  <td className="cart_price">
-                    <p>$59</p>
-                  </td>
-                  <td className="cart_quantity">
-                    <div className="cart_quantity_button">
-                      <a className="cart_quantity_up" href="">
-                        {' '}
-                        +{' '}
-                      </a>
-                      <input
-                        className="cart_quantity_input"
-                        type="text"
-                        name="quantity"
-                        value="1"
-                        autoComplete="off"
-                        size="2"
-                      />
-                      <a className="cart_quantity_down" href="">
-                        {' '}
-                        -{' '}
-                      </a>
-                    </div>
-                  </td>
-                  <td className="cart_total">
-                    <p className="cart_total_price">$59</p>
-                  </td>
-                  <td className="cart_delete">
-                    <a className="cart_quantity_delete" href="">
-                      <i className="fa fa-times"></i>
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody>{renderData()}</tbody>
             </table>
           </div>
         </div>
