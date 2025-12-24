@@ -4,7 +4,7 @@ export default function AddToCart(props) {
 
   const hanldeCart = () => {
     const cart = JSON.parse(localStorage.getItem('cart')) || {};
-    // Neu chua co trong gio hang thi them moi
+    // Nếu chưa có sản phẩm trong giỏ hàng thì thêm mới với số lượng là 1
     if (!cart[id]) {
       cart[id] = 1;
     } else {
